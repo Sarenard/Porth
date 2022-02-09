@@ -1,0 +1,9 @@
+{
+    "main" : {
+        "ERROR_MESSAGE" : "\nNot enough arguments for the program, usage : main.py [file.porth] [*-d]\n    You can also change settings.json to change how the compliator works and some random settings"
+    },
+    "parser" :  {
+        "MACRO_MAX" : 100,
+        "INCLUDE_MAX" : 100
+    }
+}

@@ -1,0 +1,10 @@
+MACROS :
+def replace(liste, element, truc):
+    liste2 = []
+    for x in liste:
+        if x == element:
+            for a in truc:
+                liste2.append(a)
+        else:
+            liste2.append(x)
+    return liste2

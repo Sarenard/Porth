@@ -1,0 +1,10 @@
+macro not dup nand end
+macro yes not not end
+macro and nand not end
+macro nor not over not nand not end
+macro or not over not nand end
+macro xor over over or rot and not and end
+macro xnor xor not end
+macro % div swap drop end
+macro // div drop end
+macro bool 0 = not end
