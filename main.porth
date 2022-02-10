@@ -1,7 +1,13 @@
 #include modules/std.porth
 
-1 bool while 
-    33 33 = if 
-        42 .
+macro factorielle
+    0 1 rot
+    2dup > while
+        1 +
+        rot rot over * rot
+        2dup >
     end
+    drop drop
 end
+
+100 factorielle print

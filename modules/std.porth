@@ -6,5 +6,14 @@ macro or not over not nand end
 macro xor over over or rot and not and end
 macro xnor xor not end
 macro % div swap drop end
-macro // div drop end
+macro / div drop end
 macro bool 0 = not end
+macro negate 0 swap - end
+macro show dup . end
+macro print . end
+macro even 2 % 0 = end
+macro odd 2 % 1 = end
+macro pair even end
+macro impair odd end
+macro False false end
+macro True true end

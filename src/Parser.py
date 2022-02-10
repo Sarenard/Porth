@@ -19,42 +19,33 @@ class Parser:
     def __init__(self, debug):
         self.content = []
         self.instructions = []
-        self._if = False
-        self.temp_if = []
-        self._macro = False
-        self.temp_macro = []
-        self._while = False
-        self.temp_while = []
         self.debug = debug
         self.total_include = 0
         self.total_macros = 0
+        self.instructions_temporaires = []
     def getstr(self, file):
         if self.debug : print(open(file).read().replace("\n", "\\n"))
-        self.content = [x for x in (" ".join(" ".join(open(file).read().split(" ")).split("\n"))).split(" ") if x != ""]
+        self.content = [x for x in (" ".join(" ".join("".join([x for x in open(file).readlines() if not x.startswith("//")]).split(" ")).split("\n"))).replace("    ", " ").split(" ") if x != ""]
         if self.debug : print(self.content)
     def generateinstructions(self):
         self.content = self.parse_includes(self.content)
         self.content = self.parse_macros(self.content)
         x = 0
+        a = 0
+        adder = self.instructions
         while True:
             try:
                 element = self.content[x]
             except:
                 break
-            adder = self.instructions
-            if self._if:
-                adder = self.temp_if
-            if self._macro:
-                adder = self.temp_macro
-            if self._while:
-                adder = self.temp_while
+            if self.debug : print(f"\nInstruction (debut {a}) : \"{element}\"\n{self.instructions=}\n{self.instructions_temporaires=}")
             if element.isnumeric():
                 adder.append((I.PUSHINT, element))
             elif element == ".":
                 adder.append((I.PRINT,))
             elif element == "+":
                 adder.append((I.ADD,))
-            elif element == "ipt":
+            elif element in ["ipt", ","]:
                 element = input()
                 if element.isnumeric():
                     adder.append((I.PUSHINT, element))
@@ -80,40 +71,66 @@ class Parser:
                 adder.append((I.NAND,))
             elif element == "rot":
                 adder.append((I.ROTATE,))
-            elif element == "if":
-                self._if = True
             elif element == "true":
                 adder.append((I.TRUE,))
             elif element == "false":
                 adder.append((I.FALSE,))
-            elif element == "macro":
-                self._macro = True
-                self.temp_macro.append(self.content[x+1])
             elif element == "#include":
                 adder.append((I.INCLUDE, self.content[x+1]))
                 x += 1
             elif element == "div":
                 adder.append((I.DIV, ))
+            elif element == "if":
+                self.instructions_temporaires.append([])
+                adder = self.instructions_temporaires[-1]
+                adder.append((I.IF, ))
             elif element == "while":
-                self._while = True
+                self.instructions_temporaires.append([])
+                adder = self.instructions_temporaires[-1]
+                adder.append((I.WHILE, ))
             elif element == "end":
-                if self._if:
-                    self._if = False
-                    self.instructions.append((I.IF, self.temp_if))
-                    self.temp_if = []
-                if self._macro:
-                    self._macro = False
-                    self.instructions.append((I.MACRO, self.temp_macro[0], self.temp_macro[2:]))
-                    self.temp_macro = []
-                if self._while:
-                    self._while = False
-                    self.instructions.append((I.WHILE, self.temp_while))
-                    self.temp_while = []
+                if len(self.instructions_temporaires) == 1:
+                    adder = self.instructions
+                    adder.append(self.instructions_temporaires[0])
+                    self.instructions_temporaires = []
+                else:
+                    self.instructions_temporaires[-2] += [self.instructions_temporaires[-1]]
+                    del self.instructions_temporaires[-1]
+                    adder = self.instructions_temporaires[-1]
+            elif element.startswith("\""):
+                string = element.split("\"")[1]
+                while not element.endswith("\""):
+                    x += 1
+                    element = self.content[x]
+                    if "\"" in element:
+                        string += " "+element.split("\"")[0]
+                    else:
+                        string += " "+element
+                adder.append((I.PUSHSTRING, string))
             else:
                 if element != "":
                     adder.append((I.MACROWORD, element))
+            if self.debug : print(f"Etape fin {a} :\n{self.instructions=}\n{self.instructions_temporaires=}\n")
             x += 1
-        if self.debug : print("Instructions", self.instructions)
+            a += 1
+        self.instructions = self.traiter_ifs(self.instructions)
+        if self.debug : print("\n\nInstructions finales :", self.instructions)
+    def traiter_ifs(self, instructions):
+        if self.debug : print("ifs avant :", instructions)
+        nouvelles_instructions = []
+        for instruction in instructions:
+            if isinstance(instruction, tuple):
+                nouvelles_instructions.append(instruction)
+            elif instruction[0] == (I.IF, ):
+                dans_le_if = self.traiter_ifs(instruction)
+                dans_le_if.pop(0)
+                nouvelles_instructions.append((I.IF, dans_le_if))
+            elif instruction[0] == (I.WHILE, ):
+                dans_le_if = self.traiter_ifs(instruction)
+                dans_le_if.pop(0)
+                nouvelles_instructions.append((I.WHILE, dans_le_if))
+        if self.debug : print("ifs après :", nouvelles_instructions)
+        return nouvelles_instructions
     def check_for_infinite_loop(self):
         if self.total_macros > MACRO_MAX:
             raise Exceptions.TooManyNestedMacros("Too many nested macros")

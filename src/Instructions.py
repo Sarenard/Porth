@@ -24,7 +24,9 @@ class I(IntEnum):
     FALSE = auto()
     WHILE = auto()
     DIV = auto()
+    PUSHSTRING = auto()
 
 class Type(IntEnum):
     INT = auto()
     BOOL = auto()
+    STRING = auto()
