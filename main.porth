@@ -1,4 +1,4 @@
 #include modules/std.porth
 #include modules/math.porth
 
-"Hello, World !" print
+"Hello, world !" printl
