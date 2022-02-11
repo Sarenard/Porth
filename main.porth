@@ -1,9 +1,4 @@
 #include modules/std.porth
 #include modules/math.porth
 
-30 is_prime dup if 
-    "C'est premier !" print newline
-end
-not if
-    "C'est pas premier !" print newline
-end
+"Hello world" print
