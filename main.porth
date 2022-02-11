@@ -1,13 +1,9 @@
 #include modules/std.porth
+#include modules/math.porth
 
-macro factorielle
-    0 1 rot
-    2dup > while
-        1 +
-        rot rot over * rot
-        2dup >
-    end
-    drop drop
+30 is_prime dup if 
+    "C'est premier !" print newline
 end
-
-100 factorielle print
+not if
+    "C'est pas premier !" print newline
+end

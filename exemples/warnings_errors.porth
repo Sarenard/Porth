@@ -1,0 +1,14 @@
+#include modules/std.porth
+#include modules/math.porth
+
+"AVEC LES NEWLINES :"      print    newline
+"Oups, il y a un probleme" error    newline
+"ceci est un warning"      warning  newline
+"et j'affiche ce texte"    print    newline
+
+// pareil que
+
+"AVEC LES \\NN :"          print    "\n" print         
+"Oups, il y a un probleme" error    "\n" print
+"ceci est un warning"      warning  "\n" print
+"et j'affiche ce texte"    print    "\n" print

@@ -1,0 +1,12 @@
+#include modules/std.porth
+#include modules/math.porth
+
+1 1
+show newline over print newline
+
+true while
+    over +
+    swap over swap - swap
+    show newline
+    true
+end

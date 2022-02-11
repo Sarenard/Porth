@@ -23,6 +23,7 @@ class Parser:
         self.total_include = 0
         self.total_macros = 0
         self.instructions_temporaires = []
+        self.liste_included = []
     def getstr(self, file):
         if self.debug : print(open(file).read().replace("\n", "\\n"))
         self.content = [x for x in (" ".join(" ".join("".join([x for x in open(file).readlines() if not x.startswith("//")]).split(" ")).split("\n"))).replace("    ", " ").split(" ") if x != ""]
@@ -49,12 +50,14 @@ class Parser:
                 element = input()
                 if element.isnumeric():
                     adder.append((I.PUSHINT, element))
+                else:
+                    adder.append((I.PUSHSTRING, element))
             elif element == "dup":
                 adder.append((I.DUP,))
             elif element == "2dup":
                 adder.append((I.DUP2,))
-            elif element == "swap":
-                adder.append((I.SWAP, ))
+            # elif element == "swap":
+            #     adder.append((I.ROTATE, 2, ))
             elif element == "over":
                 adder.append((I.OVER, ))
             elif element == "*":
@@ -69,8 +72,11 @@ class Parser:
                 adder.append((I.BIGGER,))
             elif element == "nand":
                 adder.append((I.NAND,))
-            elif element == "rot":
-                adder.append((I.ROTATE,))
+            elif element.startswith("rot"):
+                if element == "rot":
+                    adder.append((I.ROTATE, 3, ))
+                else:
+                    adder.append((I.ROTATE, int(element[3:]), ))
             elif element == "true":
                 adder.append((I.TRUE,))
             elif element == "false":
@@ -137,17 +143,25 @@ class Parser:
         if self.total_include > INCLUDE_MAX:
             raise Exceptions.TooManyNestedIncludes("Too many nested includes")
     def parse_includes(self, instructions):
-        if self.debug : print("includes avant :", instructions)
+        if self.debug : print("includes avant :", instructions, "liste modules inclus:", self.liste_included)
         liste_includes = []
-        for i in range(len(instructions)-1):
+        for i in range(len(instructions)-2):
             if instructions[i] == "#include":
-                liste_includes.append((instructions[i], instructions[i+1]))
-                instructions[i] = instructions[i]+" "+instructions[i+1]
-                del instructions[i+1]
+                if instructions[i+1] not in self.liste_included:
+                    self.liste_included.append(instructions[i+1])
+                    liste_includes.append((instructions[i], instructions[i+1]))
+                    instructions[i] = instructions[i]+" "+instructions[i+1]
+                    del instructions[i+1]
+                else:
+                    self.liste_included.append(instructions[i+1])
+                    # liste_includes.append((instructions[i], instructions[i+1]))
+                    instructions[i] = instructions[i]+" "+instructions[i+1]
+                    del instructions[i+1]
+                    del instructions[i]
         for include in liste_includes:
             content = open(include[1]).read().replace("\n", " ").split(" ")
             instructions = replace(instructions, include[0]+" "+include[1], content)
-        if self.debug : print("includes après :", instructions)
+        if self.debug : print("includes après :", instructions, "liste modules inclus:", self.liste_included)
         instructions = [x.replace("\n", " ") for x in instructions if x not in ["", " ", "\n"]]
         instructions2 = []
         for truc in instructions:

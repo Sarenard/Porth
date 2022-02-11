@@ -28,7 +28,11 @@ class Interpreteur:
                 case I.PRINT, :
                     if len(self.stack) < 1 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack")
                     a = self.stack.pop()
-                    print(a[1])
+                    if a[0] == Type.STRING :
+                        a = (Type.STRING, a[1].replace("\\n", "\n"))
+                        a = (Type.STRING, a[1].replace("\\033", "\033"))
+                        a = (Type.STRING, a[1].replace("\\N", ""))
+                    print(a[1], end="")
                 case I.TRUE, :
                     self.stack.append((Type.BOOL, True))
                 case I.FALSE, :
@@ -38,14 +42,12 @@ class Interpreteur:
                     a = self.stack.pop()
                     self.stack.append(a)
                     self.stack.append(a)
-                case I.ROTATE, :
-                    if len(self.stack) < 3 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack")
-                    a = self.stack.pop()
-                    b = self.stack.pop()
-                    c = self.stack.pop()
-                    self.stack.append(a)
-                    self.stack.append(c)
-                    self.stack.append(b)
+                case I.ROTATE, nb, :
+                    if len(self.stack) < nb : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack")
+                    liste = [self.stack.pop() for _ in range(nb)]
+                    self.stack.append(liste[0])
+                    for x in range(nb-1, 0, -1):
+                        self.stack.append(liste[x])
                 case I.DUP2, :
                     if len(self.stack) < 2 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack")
                     a = self.stack.pop()
@@ -56,12 +58,6 @@ class Interpreteur:
                     a = self.stack.pop()
                     b = self.stack.pop()
                     self.stack.append(b)
-                    self.stack.append(a)
-                    self.stack.append(b)
-                case I.SWAP, :
-                    if len(self.stack) < 2 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack")
-                    a = self.stack.pop()
-                    b = self.stack.pop()
                     self.stack.append(a)
                     self.stack.append(b)
                 case I.DROP, :

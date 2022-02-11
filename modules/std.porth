@@ -17,3 +17,22 @@ macro pair even end
 macro impair odd end
 macro False false end
 macro True true end
+macro space "\N \N" print end
+macro dup2 2dup end
+
+macro newline "\n" print end
+macro endl newline end
+macro \n endl end
+
+macro gray    "\033[90m" print print "\033[0m" print end
+macro red     "\033[91m" print print "\033[0m" print end
+macro green   "\033[92m" print print "\033[0m" print end
+macro yellow  "\033[93m" print print "\033[0m" print end
+macro blue    "\033[94m" print print "\033[0m" print end
+macro magenta "\033[95m" print print "\033[0m" print end
+macro cyan    "\033[96m" print print "\033[0m" print end
+macro white   "\033[97m" print print "\033[0m" print end
+macro warning "[warning] "    yellow yellow          end
+macro error   "[error] "      red    red             end
+
+macro swap rot2 end

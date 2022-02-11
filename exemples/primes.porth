@@ -1,0 +1,18 @@
+#include modules/std.porth
+#include modules/math.porth
+
+100 1
+2dup > while
+    1 +
+    dup is_prime dup if
+        "Le nombre " print
+        swap show swap
+        space "est premier\n" print
+    end
+    not if 
+        "Le nombre " print 
+        show
+        space "n'est pas premier\n" print 
+        end
+    2dup >
+end
