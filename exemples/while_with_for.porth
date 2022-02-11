@@ -1,7 +1,6 @@
 #include modules/std.porth
 #include modules/math.porth
 
-
 1000 for while
     
     showl

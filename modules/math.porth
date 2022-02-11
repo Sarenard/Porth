@@ -26,4 +26,4 @@ macro is_prime
 end
 
 macro ** dup * end
-macro ^ dup ** end
+macro ^ ** end
