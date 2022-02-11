@@ -26,7 +26,7 @@ class Parser:
         self.liste_included = []
     def getstr(self, file):
         if self.debug : print(open(file).read().replace("\n", "\\n"))
-        self.content = [x for x in (" ".join(" ".join("".join([x for x in open(file).readlines() if not x.startswith("//")]).split(" ")).split("\n"))).replace("    ", " ").split(" ") if x != ""]
+        self.content = [x for x in (" ".join(" ".join("".join([x for x in open(file).readlines() if not x.lstrip().startswith("//")]).split(" ")).split("\n"))).replace("    ", " ").split(" ") if x != ""]
         if self.debug : print(self.content)
     def generateinstructions(self):
         self.content = self.parse_includes(self.content)

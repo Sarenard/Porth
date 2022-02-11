@@ -16,8 +16,6 @@ class Interpreteur:
                 case I.VARSET, :
                     name = self.stack.pop()
                     value = self.stack.pop()
-                    if not name[0] == Type.STRING:
-                        raise Exceptions.BadTypesOnTheStack("Bad type on the stack in the VARSET, needed STRING, got " + str(name[0]))
                     self.variables[name[1]] = value
                 case I.VARGET, :
                     name = self.stack.pop()
