@@ -20,6 +20,8 @@ macro True true end
 macro space "\N \N" print end
 macro dup2 2dup end
 
+macro printl print newline end
+macro showl show newline end
 macro newline "\n" print end
 macro endl newline end
 macro \n endl end
@@ -36,3 +38,7 @@ macro warning "[warning] "    yellow yellow          end
 macro error   "[error] "      red    red             end
 
 macro swap rot2 end
+
+macro set @= end
+macro get @! end
+macro var_add dup get rot rot + swap set end

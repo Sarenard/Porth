@@ -1,12 +1,19 @@
 #include modules/std.porth
 #include modules/math.porth
 
-1 1
-show newline over print newline
+macro multiple_of_3 dup 3 % 0 = end
+macro multiple_of_5 dup 5 % 0 = end
+macro multiple_of_3_or_5 dup dup multiple_of_3 swap multiple_of_5 rot rot or swap drop swap drop end
 
-true while
-    over +
-    swap over swap - swap
-    show newline
-    true
-end
+0 "sum" set
+
+1000 0 2dup > while
+    multiple_of_3_or_5 if
+        dup "sum" var_add
+    end
+    
+    drop 1 + 2dup >
+end drop drop
+
+"sum of multiples of 3 o\Nr 5 below 1000 :" print space
+"sum" get print

@@ -56,10 +56,12 @@ class Parser:
                 adder.append((I.DUP,))
             elif element == "2dup":
                 adder.append((I.DUP2,))
-            # elif element == "swap":
-            #     adder.append((I.ROTATE, 2, ))
             elif element == "over":
                 adder.append((I.OVER, ))
+            elif element == "@=":
+                adder.append((I.VARSET, ))
+            elif element == "@!":
+                adder.append((I.VARGET, ))
             elif element == "*":
                 adder.append((I.MUL,))
             elif element == "drop":

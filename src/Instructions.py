@@ -25,6 +25,8 @@ class I(IntEnum):
     WHILE = auto()
     DIV = auto()
     PUSHSTRING = auto()
+    VARSET = auto()
+    VARGET = auto()
 
 class Type(IntEnum):
     INT = auto()
