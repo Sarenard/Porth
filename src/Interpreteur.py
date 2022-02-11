@@ -5,12 +5,23 @@ class Interpreteur:
     def __init__(self, debug):
         self.debug = debug
         self.stack = []
+        self.variables = {}
     def run(self, instructions):
         for instruction in instructions:
             if self.debug :
                 print(instruction)
                 print(self.stack)
+                print(self.variables)
             match instruction:
+                case I.VARSET, :
+                    name = self.stack.pop()
+                    value = self.stack.pop()
+                    if not name[0] == Type.STRING:
+                        raise Exceptions.BadTypesOnTheStack("Bad type on the stack")
+                    self.variables[name[1]] = value
+                case I.VARGET, :
+                    name = self.stack.pop()
+                    self.stack.append(self.variables[name[1]])
                 case I.PUSHINT, nb:
                     self.stack.append((Type.INT, int(nb)))
                 case I.PUSHSTRING, texte:
@@ -43,6 +54,8 @@ class Interpreteur:
                     self.stack.append(a)
                     self.stack.append(a)
                 case I.ROTATE, nb, :
+                    # ex : 
+                    # 5 4 3 rot ==> 4 3 5
                     if len(self.stack) < nb : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack")
                     liste = [self.stack.pop() for _ in range(nb)]
                     self.stack.append(liste[0])
@@ -136,4 +149,5 @@ class Interpreteur:
                         else:
                             raise Exceptions.BadTypesOnTheStack("Bad types on the stack")
             if self.debug:
-                print(self.stack, "\n")
+                print(self.stack)
+                print(self.variables, "\n")
