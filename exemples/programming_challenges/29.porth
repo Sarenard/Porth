@@ -1,0 +1,11 @@
+#include modules/math.porth
+#include modules/std.porth
+
+1 "result" set
+
+1000 1 + 1 dup2  > while
+    dup "result" var_mul
+    1 + dup2 >
+end
+
+"Le resultat est : " print "result" get printl

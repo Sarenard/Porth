@@ -53,6 +53,7 @@ macro swap rot2 end
 macro set @= end
 macro get @! end
 macro var_add dup get rot rot + swap set end
+macro var_mul dup get rot rot * swap set end
 
 macro for 0 dup2 dup2 > end
 macro endfor 1 + dup2 > end

@@ -1,0 +1,15 @@
+#include modules/math.porth
+#include modules/std.porth
+
+macro multiple_of_3 dup 3 % 0 = end
+macro multiple_of_5 dup 5 % 0 = end
+
+1000 for while
+    
+    show ": \N" space print
+    multiple_of_5 if "Fizz" print end
+    multiple_of_3 if "Buzz" print end
+    newline
+
+    endfor
+end
