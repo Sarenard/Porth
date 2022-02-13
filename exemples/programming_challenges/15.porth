@@ -17,7 +17,7 @@ macro 3n+1_process
     true while
         3n+1_step dup green odrop space
         
-        false over 1 = not if drop true end
+        false over 1 = not if not end
     end
     newline
     drop
