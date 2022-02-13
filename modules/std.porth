@@ -51,6 +51,7 @@ macro errorl    "[error] "      red    red             newline end
 macro swap rot2 end
 
 macro set @= end
+macro set_copy over swap @= end
 macro get @! end
 macro var_to_int dup get rot rot end
 macro var_add var_to_int + swap set end

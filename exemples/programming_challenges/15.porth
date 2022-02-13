@@ -1,7 +1,7 @@
 #include modules/std.porth
 
 macro 3n+1_step
-    dup "valeur" set
+    "valeur" set_copy
     dup even dup if
         2 "valeur" var_div
     end
