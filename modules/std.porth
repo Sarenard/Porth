@@ -60,6 +60,7 @@ macro var_div var_to_int / swap set end
 macro var_mod var_to_int % swap set end
 
 macro for dup2 > end
+macro for0 0 for end
 macro endfor 1 + dup2 > end
 
 macro 2var_get get swap get swap end
