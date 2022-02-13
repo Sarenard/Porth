@@ -4,8 +4,8 @@
 10 "var1" set
 5 "var2" set
 
-"var1" "var2" 2var_add print space 10 5 + printl
-"var1" "var2" 2var_sub print space 10 5 - printl
-"var1" "var2" 2var_mul print space 10 5 * printl
-"var1" "var2" 2var_div print space 10 5 / printl
-"var1" "var2" 2var_mod print space 10 5 % printl
+"var1" "var2" 2var_add 10 5 + = printl
+"var1" "var2" 2var_sub 10 5 - = printl
+"var1" "var2" 2var_mul 10 5 * = printl
+"var1" "var2" 2var_div 10 5 / = printl
+"var1" "var2" 2var_mod 10 5 % = printl
