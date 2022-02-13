@@ -1,6 +1,6 @@
 #include modules/std.porth
 
-macro step
+macro 3n+1_step
     dup "valeur" set
     dup even dup if
         2 "valeur" var_div
@@ -12,9 +12,10 @@ macro step
     "valeur" get
 end
 
-macro process
+macro 3n+1_process
+    dup
     true while
-        step show swap drop space
+        3n+1_step show swap drop space
         false over 1 = not if drop true end
     end
     newline
@@ -23,7 +24,7 @@ end
 
 100 1 for while
 
-    dup show "\N : \N" print process
+    show "\N : \N" print 3n+1_process
 
     endfor
 end
