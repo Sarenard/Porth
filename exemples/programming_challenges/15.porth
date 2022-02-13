@@ -15,7 +15,7 @@ end
 macro 3n+1_process
     dup
     true while
-        3n+1_step show swap drop space
+        3n+1_step dup green swap drop space
         false over 1 = not if drop true end
     end
     newline
@@ -24,7 +24,7 @@ end
 
 100 1 for while
 
-    show "\N : \N" print 3n+1_process
+    dup red "\N : \N" yellow 3n+1_process
 
     endfor
 end
