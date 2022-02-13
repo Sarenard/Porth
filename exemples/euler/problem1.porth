@@ -4,7 +4,7 @@
 
 // macro multiple_of_3 dup 3 % 0 = end
 // macro multiple_of_5 dup 5 % 0 = end
-// macro multiple_of_3_or_5 dup multiple_of_3 swap multiple_of_5 rot rot or swap drop swap drop end
+// macro multiple_of_3_or_5 dup multiple_of_3 swap multiple_of_5 rot rot or odrop odrop end
 
 // // sum of multiples of 3 or 5 below 1000
 // 0
@@ -25,7 +25,7 @@
 
 macro multiple_of_3 dup 3 % 0 = end
 macro multiple_of_5 dup 5 % 0 = end
-macro multiple_of_3_or_5 dup dup multiple_of_3 swap multiple_of_5 rot rot or swap drop swap drop end
+macro multiple_of_3_or_5 dup dup multiple_of_3 swap multiple_of_5 rot rot or odrop odrop end
 
 0 "sum" set
 
