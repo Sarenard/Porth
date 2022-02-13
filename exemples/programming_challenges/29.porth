@@ -3,11 +3,11 @@
 
 1 "result" set
 // le nombre dont on va calculer la factorielle
-1000
+100
 
 1 + 1 dup2  > while
     dup "result" var_mul
     1 + dup2 >
-end
+end drop drop
 
 "Le resultat est : " print "result" get printl

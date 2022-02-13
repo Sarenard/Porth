@@ -33,7 +33,7 @@ class Interpreteur:
                     elif b[0] == Type.STRING and a[0] == Type.STRING:
                         self.stack.append((Type.STRING, a[1] + b[1]))
                     else:
-                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the ADD, needed INT+INT or STRING++STRING, got " + str(a[0]) + " and " + str(b[0]))
+                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the ADD, needed INT+INT or STRING+STRING, got " + str(a[0]) + " and " + str(b[0]))
                 case I.PRINT, :
                     if len(self.stack) < 1 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack in the PRINT, needed 1, got " + str(len(self.stack)))
                     a = self.stack.pop()

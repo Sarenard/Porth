@@ -4,7 +4,9 @@
 
 1000 for while
     
-    showl
+    dup is_prime if
+        showl
+    end
 
     endfor
 end
