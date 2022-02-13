@@ -1,12 +1,11 @@
 #include modules/std.porth
 #include modules/math.porth
 
+10 "var1" set
+5 "var2" set
 
-1000 for while
-    
-    dup is_prime if
-        showl
-    end
-
-    endfor
-end
+"var1" "var2" 2var_add print space 10 5 + printl
+"var1" "var2" 2var_sub print space 10 5 - printl
+"var1" "var2" 2var_mul print space 10 5 * printl
+"var1" "var2" 2var_div print space 10 5 / printl
+"var1" "var2" 2var_mod print space 10 5 % printl

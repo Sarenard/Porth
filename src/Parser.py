@@ -28,7 +28,7 @@ class Parser:
         if self.debug : print(open(file).read().replace("\n", "\\n"))
         self.content = [x for x in (" ".join(" ".join("".join([x for x in open(file).readlines() if not x.lstrip().startswith("//")]).split(" ")).split("\n"))).replace("    ", " ").split(" ") if x != ""]
         if self.debug : print(self.content)
-    def generateinstructions(self):
+    def generateinstructions(self): # sourcery no-metrics
         self.content = self.parse_includes(self.content)
         self.content = self.parse_macros(self.content)
         x = 0
@@ -152,17 +152,17 @@ class Parser:
                 if instructions[i+1] not in self.liste_included:
                     self.liste_included.append(instructions[i+1])
                     liste_includes.append((instructions[i], instructions[i+1]))
-                    instructions[i] = instructions[i]+" "+instructions[i+1]
+                    instructions[i] = f'{instructions[i]} {instructions[i+1]}'
                     del instructions[i+1]
                 else:
                     self.liste_included.append(instructions[i+1])
                     # liste_includes.append((instructions[i], instructions[i+1]))
-                    instructions[i] = instructions[i]+" "+instructions[i+1]
+                    instructions[i] = f'{instructions[i]} {instructions[i+1]}'
                     del instructions[i+1]
                     del instructions[i]
         for include in liste_includes:
             content = open(include[1]).read().replace("\n", " ").split(" ")
-            instructions = replace(instructions, include[0]+" "+include[1], content)
+            instructions = replace(instructions, f'{include[0]} {include[1]}', content)
         if self.debug : print("includes après :", instructions, "liste modules inclus:", self.liste_included)
         instructions = [x.replace("\n", " ") for x in instructions if x not in ["", " ", "\n"]]
         instructions2 = []
@@ -174,12 +174,12 @@ class Parser:
             else:
                 instructions2.append(truc)
         instructions = instructions2
-        if sum([True for x in instructions if x == "#include"]) > 0:
+        if sum(True for x in instructions if x == "#include") > 0:
             self.total_include += 1
             self.check_for_infinite_loop()
             instructions = self.parse_includes(instructions)
         return instructions
-    def parse_macros(self, content, macros_total=[]):
+    def parse_macros(self, content, macros_total=[]):  # sourcery no-metrics skip: comprehension-to-generator, default-mutable-arg, hoist-statement-from-if, swap-nested-ifs
         if "iteration" not in globals() : globals()["iteration"]=1
         else: globals()["iteration"] += 1
         if self.debug : print(f"macros avant (iteration {globals()['iteration']}) :", content)
@@ -209,16 +209,15 @@ class Parser:
         content = content_remplacement
         if self.debug : print(f"macros pendant (iteration {globals()['iteration']}) : macros:{macros_total}, content:{content}")
         content_remplacement = []
-        for i in range(len(content)):
+        for item in content:
             for macro in macros_total:
-                if macro[0] == content[i]:
+                if macro[0] == item:
                     content_remplacement += macro[1]
-            else:
-                if not sum([macro[0] == content[i] for macro in macros_total]) :
-                    content_remplacement.append(content[i])
+            if not sum(macro[0] == item for macro in macros_total):
+                content_remplacement.append(item)
         content = content_remplacement
         if self.debug : print(f"macros après (iteration {globals()['iteration']}) :", content)
-        if sum([True for macro in macros_total for i in range(len(content)) if macro[0] == content[i]]):
+        if sum([macro[0] == content[i] for macro in macros_total for i in range(len(content))]):
             self.total_macros += 1
             self.check_for_infinite_loop()
             content = self.parse_macros(content, macros_total)
