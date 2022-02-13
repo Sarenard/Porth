@@ -1,9 +1,8 @@
 #include modules/std.porth
 #include modules/math.porth
 
-100 1
-2dup > while
-    1 +
+100 2
+for while
     dup is_prime dup if
         "Le nombre " print
         swap show swap
@@ -14,5 +13,5 @@
         show
         space "n'est pas premier\n" print 
         end
-    2dup >
+    endfor
 end

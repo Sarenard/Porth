@@ -1,0 +1,29 @@
+#include modules/std.porth
+
+macro step
+    dup "valeur" set
+    dup even dup if
+        2 "valeur" var_div
+    end
+    not if
+        3 "valeur" var_mul
+        1 "valeur" var_add
+    end
+    "valeur" get
+end
+
+macro process
+    true while
+        step show swap drop space
+        false over 1 = not if drop true end
+    end
+    newline
+    drop
+end
+
+100 1 for while
+
+    dup show "\N : \N" print process
+
+    endfor
+end

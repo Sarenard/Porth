@@ -3,7 +3,7 @@
 
 600851475143
 2 true rot
-2dup > while
+for while
     is_divisible if
         rot rot drop false rot
         "Voila un facteur de 600851475143 :" print space show endl
@@ -11,7 +11,6 @@
             "Voila un nombre premier de 600851475143 :" print space show endl
         end
     end
-    1 +
-    2dup >
+    endfor
 end
 drop drop

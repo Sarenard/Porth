@@ -52,10 +52,14 @@ macro swap rot2 end
 
 macro set @= end
 macro get @! end
-macro var_add dup get rot rot + swap set end
-macro var_mul dup get rot rot * swap set end
+macro var_to_int dup get rot rot end
+macro var_add var_to_int + swap set end
+macro var_mul var_to_int * swap set end
+macro var_sub var_to_int - swap set end
+macro var_div var_to_int / swap set end
+macro var_mod var_to_int % swap set end
 
-macro for 0 dup2 > end
+macro for dup2 > end
 macro endfor 1 + dup2 > end
 
 macro 2var_get get swap get swap end

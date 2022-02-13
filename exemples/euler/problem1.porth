@@ -29,12 +29,12 @@ macro multiple_of_3_or_5 dup dup multiple_of_3 swap multiple_of_5 rot rot or swa
 
 0 "sum" set
 
-1000 0 2dup > while
+1000 0 for while
     multiple_of_3_or_5 if
         dup "sum" var_add
     end
-    
-    drop 1 + 2dup >
+    drop 
+    endfor
 end drop drop
 
 "sum of multiples of 3 o\Nr 5 below 1000 :" print space
