@@ -54,10 +54,14 @@ class Parser:
                     adder.append((I.PUSHSTRING, element))
             elif element == "dup":
                 adder.append((I.DUP,))
+            elif element == "split":
+                adder.append((I.SPLIT, ))
             elif element == "2dup":
                 adder.append((I.DUP2,))
+            elif element == "lstack":
+                adder.append((I.STACK_LEN, ))
             elif element == "over":
-                adder.append((I.OVER, ))
+                 adder.append((I.OVER, ))
             elif element == "@=":
                 adder.append((I.VARSET, ))
             elif element == "@!":

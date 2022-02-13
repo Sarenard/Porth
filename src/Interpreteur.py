@@ -17,6 +17,13 @@ class Interpreteur:
                     name = self.stack.pop()
                     value = self.stack.pop()
                     self.variables[name[1]] = value
+                case I.STACK_LEN, :
+                    self.stack.append((Type.INT, len(self.stack)))
+                case I.SPLIT, :
+                    a = self.stack.pop()
+                    b = self.stack.pop()
+                    for x in b[1].split(a[1]):
+                        self.stack.append((Type.STRING, x))
                 case I.VARGET, :
                     name = self.stack.pop()
                     self.stack.append(self.variables[name[1]])

@@ -72,3 +72,9 @@ macro 2var_div 2var_get / end
 macro 2var_mod 2var_get % end
 
 macro odrop swap drop end
+
+macro is_stack_empty lstack 0 = end
+macro is_stack_not_empty is_stack_empty not end
+
+macro print_stack is_stack_not_empty while print is_stack_not_empty end end
+macro printl_stack is_stack_not_empty while printl is_stack_not_empty end end

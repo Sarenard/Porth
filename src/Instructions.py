@@ -27,6 +27,8 @@ class I(IntEnum):
     PUSHSTRING = auto()
     VARSET = auto()
     VARGET = auto()
+    STACK_LEN = auto()
+    SPLIT = auto()
 
 class Type(IntEnum):
     INT = auto()
