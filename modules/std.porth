@@ -37,16 +37,16 @@ macro white   "\033[97m" print print "\033[0m" print end
 macro warning "[warning] "    yellow yellow          end
 macro error   "[error] "      red    red             end
 
-macro grayl     "\033[90m" print print "\033[0m" print newline end
-macro redl      "\033[91m" print print "\033[0m" print newline end
-macro greenl    "\033[92m" print print "\033[0m" print newline end
-macro yellowl   "\033[93m" print print "\033[0m" print newline end
-macro bluel     "\033[94m" print print "\033[0m" print newline end
-macro magental  "\033[95m" print print "\033[0m" print newline end
-macro cyanl     "\033[96m" print print "\033[0m" print newline end
-macro whitel    "\033[97m" print print "\033[0m" print newline end
-macro warningl  "[warning] "    yellow yellow          newline end
-macro errorl    "[error] "      red    red             newline end
+macro grayl     gray    newline end
+macro redl      red     newline end
+macro greenl    green   newline end
+macro yellowl   yellow  newline end
+macro bluel     blue    newline end
+macro magental  magenta newline end
+macro cyanl     cyan    newline end
+macro whitel    white   newline end
+macro warningl  warning newline end
+macro errorl    error   newline end
 
 macro swap rot2 end
 
