@@ -2,8 +2,9 @@ from src.Instructions import I, Type
 import src.Exceptions as Exceptions
 
 class Interpreteur:
-    def __init__(self, debug):
+    def __init__(self, debug, debug_output):
         self.debug = debug
+        self.debug_output = debug_output
         self.stack = []
         self.variables = {}
     def run(self, instructions):
@@ -12,6 +13,10 @@ class Interpreteur:
                 print(instruction)
                 print(self.stack)
                 print(self.variables)
+            if self.debug_output :
+                print(instruction, file=open("debug.txt", "a"), flush=True)
+                print(self.stack, file=open("debug.txt", "a"), flush=True)
+                print(self.variables, file=open("debug.txt", "a"), flush=True)
             match instruction:
                 case I.VARSET, :
                     name = self.stack.pop()
@@ -170,3 +175,6 @@ class Interpreteur:
             if self.debug:
                 print(self.stack)
                 print(self.variables, "\n")
+            if self.debug_output:
+                print(self.stack, file=open("debug.txt", "a"), flush=True)
+                print(self.variables, "\n", file=open("debug.txt", "a"), flush=True)

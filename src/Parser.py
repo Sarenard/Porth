@@ -16,9 +16,10 @@ def replace(liste, element, truc):
     return liste2
 
 class Parser:
-    def __init__(self, debug):
+    def __init__(self, debug, debug_output):
         self.content = []
         self.instructions = []
+        self.debug_output = debug_output
         self.debug = debug
         self.total_include = 0
         self.total_macros = 0
@@ -26,8 +27,10 @@ class Parser:
         self.liste_included = []
     def getstr(self, file):
         if self.debug : print(open(file).read().replace("\n", "\\n"))
+        if self.debug_output : print(open(file).read().replace("\n", "\\n"), file=open("debug.txt", "w"), flush=True)
         self.content = [x for x in (" ".join(" ".join("".join([x for x in open(file).readlines() if not x.lstrip().startswith("//")]).split(" ")).split("\n"))).replace("    ", " ").split(" ") if x != ""]
         if self.debug : print(self.content)
+        if self.debug_output : print(self.content, file=open("debug.txt", "a"), flush=True)
     def generateinstructions(self): # sourcery no-metrics
         self.content = self.parse_includes(self.content)
         self.content = self.parse_macros(self.content)
@@ -40,6 +43,7 @@ class Parser:
             except:
                 break
             if self.debug : print(f"\nInstruction (debut {a}) : \"{element}\"\n{self.instructions=}\n{self.instructions_temporaires=}")
+            if self.debug_output : print(f"\nInstruction (debut {a}) : \"{element}\"\n{self.instructions=}\n{self.instructions_temporaires=}", file=open("debug.txt", "a"), flush=True)
             if element.isnumeric():
                 adder.append((I.PUSHINT, element))
             elif element == ".":
@@ -125,12 +129,15 @@ class Parser:
                 if element != "":
                     adder.append((I.MACROWORD, element))
             if self.debug : print(f"Etape fin {a} :\n{self.instructions=}\n{self.instructions_temporaires=}\n")
+            if self.debug_output : print(f"Etape fin {a} :\n{self.instructions=}\n{self.instructions_temporaires=}\n", file=open("debug.txt", "a"), flush=True)
             x += 1
             a += 1
         self.instructions = self.traiter_ifs(self.instructions)
         if self.debug : print("\n\nInstructions finales :", self.instructions)
+        if self.debug_output : print("\n\nInstructions finales :", self.instructions, file=open("debug.txt", "a"), flush=True)
     def traiter_ifs(self, instructions):
         if self.debug : print("ifs avant :", instructions)
+        if self.debug_output : print("ifs avant :", instructions, file=open("debug.txt", "a"), flush=True)
         nouvelles_instructions = []
         for instruction in instructions:
             if isinstance(instruction, tuple):
@@ -143,7 +150,8 @@ class Parser:
                 dans_le_if = self.traiter_ifs(instruction)
                 dans_le_if.pop(0)
                 nouvelles_instructions.append((I.WHILE, dans_le_if))
-        if self.debug : print("ifs après :", nouvelles_instructions)
+        if self.debug : print("ifs apres :", nouvelles_instructions)
+        if self.debug_output : print("ifs apres :", nouvelles_instructions, file=open("debug.txt", "a"), flush=True)
         return nouvelles_instructions
     def check_for_infinite_loop(self):
         if self.total_macros > MACRO_MAX:
@@ -152,6 +160,7 @@ class Parser:
             raise Exceptions.TooManyNestedIncludes("Too many nested includes")
     def parse_includes(self, instructions):
         if self.debug : print("includes avant :", instructions, "liste modules inclus:", self.liste_included)
+        if self.debug_output : print("includes avant :", instructions, "liste modules inclus:", self.liste_included, file=open("debug.txt", "a"), flush=True)
         liste_includes = []
         for i in range(len(instructions)-2):
             if instructions[i] == "#include":
@@ -169,7 +178,8 @@ class Parser:
         for include in liste_includes:
             content = open(include[1]).read().replace("\n", " ").split(" ")
             instructions = replace(instructions, f'{include[0]} {include[1]}', content)
-        if self.debug : print("includes après :", instructions, "liste modules inclus:", self.liste_included)
+        if self.debug : print("includes apres :", instructions, "liste modules inclus:", self.liste_included)
+        if self.debug_output : print("includes apres :", instructions, "liste modules inclus:", self.liste_included, file=open("debug.txt", "a"), flush=True)
         instructions = [x.replace("\n", " ") for x in instructions if x not in ["", " ", "\n"]]
         instructions2 = []
         for truc in instructions:
@@ -189,6 +199,7 @@ class Parser:
         if "iteration" not in globals() : globals()["iteration"]=1
         else: globals()["iteration"] += 1
         if self.debug : print(f"macros avant (iteration {globals()['iteration']}) :", content)
+        if self.debug_output : print(f"macros avant (iteration {globals()['iteration']}) :", content, file=open("debug.txt", "a"), flush=True)
         macros_total = macros_total
         macro_temp = []
         macro_en_cours = False
@@ -214,6 +225,7 @@ class Parser:
                 macro_temp.append(content[i])
         content = content_remplacement
         if self.debug : print(f"macros pendant (iteration {globals()['iteration']}) : macros:{macros_total}, content:{content}")
+        if self.debug_output : print(f"macros pendant (iteration {globals()['iteration']}) : macros:{macros_total}, content:{content}", file=open("debug.txt", "a"), flush=True)
         content_remplacement = []
         for item in content:
             for macro in macros_total:
@@ -223,6 +235,7 @@ class Parser:
                 content_remplacement.append(item)
         content = content_remplacement
         if self.debug : print(f"macros après (iteration {globals()['iteration']}) :", content)
+        if self.debug_output : print(f"macros après (iteration {globals()['iteration']}) :", content, file=open("debug.txt", "a"), flush=True)
         if sum([macro[0] == content[i] for macro in macros_total for i in range(len(content))]):
             self.total_macros += 1
             self.check_for_infinite_loop()

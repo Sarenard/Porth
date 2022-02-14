@@ -80,4 +80,6 @@ macro is_stack_not_empty is_stack_empty not end
 macro print_stack is_stack_not_empty while print is_stack_not_empty end end
 macro printl_stack is_stack_not_empty while printl is_stack_not_empty end end
 
-macro len lstack "taille_avant" set "" split lstack "taille_avant" get - "taille_avant" dropvar end
+macro len lstack "taille_avant" set "" split lstack "taille_avant" get - "taille_avant" dropvar 1 + end
+
+macro drop_stack is_stack_not_empty while drop is_stack_not_empty end end
