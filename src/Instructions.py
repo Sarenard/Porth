@@ -29,6 +29,7 @@ class I(IntEnum):
     VARGET = auto()
     STACK_LEN = auto()
     SPLIT = auto()
+    DROP_VAR = auto()
 
 class Type(IntEnum):
     INT = auto()

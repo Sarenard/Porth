@@ -18,6 +18,7 @@ macro False false end
 macro True true end
 macro space "\N \N" print end
 macro dup2 2dup end
+macro vardrop dropvar end
 
 macro print . end
 macro printl print newline end
@@ -78,3 +79,5 @@ macro is_stack_not_empty is_stack_empty not end
 
 macro print_stack is_stack_not_empty while print is_stack_not_empty end end
 macro printl_stack is_stack_not_empty while printl is_stack_not_empty end end
+
+macro len lstack "taille_avant" set "" split lstack "taille_avant" get - "taille_avant" dropvar end

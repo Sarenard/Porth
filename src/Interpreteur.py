@@ -22,11 +22,21 @@ class Interpreteur:
                 case I.SPLIT, :
                     a = self.stack.pop()
                     b = self.stack.pop()
-                    for x in b[1].split(a[1]):
-                        self.stack.append((Type.STRING, x))
+                    if a[1] == "":
+                        for x in b[1]:
+                            self.stack.append((Type.STRING, x))
+                    else:
+                        for x in b[1].split(a[1]):
+                            self.stack.append((Type.STRING, x))
                 case I.VARGET, :
                     name = self.stack.pop()
                     self.stack.append(self.variables[name[1]])
+                case I.DROP_VAR, :
+                    name = self.stack.pop()
+                    try:
+                        self.variables.pop(name[1])
+                    except KeyError:
+                        raise Exceptions.VariableNotFound(f"Variable {name[1]} not found")
                 case I.PUSHINT, nb:
                     self.stack.append((Type.INT, int(nb)))
                 case I.PUSHSTRING, texte:
@@ -39,8 +49,12 @@ class Interpreteur:
                         self.stack.append((Type.INT, a[1] + b[1]))
                     elif b[0] == Type.STRING and a[0] == Type.STRING:
                         self.stack.append((Type.STRING, a[1] + b[1]))
+                    elif b[0] == Type.STRING and a[0] == Type.INT:
+                        self.stack.append((Type.STRING, str(a[1]) + b[1]))
+                    elif b[0] == Type.INT and a[0] == Type.STRING:
+                        self.stack.append((Type.STRING, a[1] + str(b[1])))
                     else:
-                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the ADD, needed INT+INT or STRING+STRING, got " + str(a[0]) + " and " + str(b[0]))
+                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the ADD, needed INT+INT, STRING+STRING, INT+STRING or STRING+INT, got " + str(a[0]) + " and " + str(b[0]))
                 case I.PRINT, :
                     if len(self.stack) < 1 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack in the PRINT, needed 1, got " + str(len(self.stack)))
                     a = self.stack.pop()

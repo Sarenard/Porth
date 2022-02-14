@@ -66,6 +66,8 @@ class Parser:
                 adder.append((I.VARSET, ))
             elif element == "@!":
                 adder.append((I.VARGET, ))
+            elif element == "dropvar":
+                adder.append((I.DROP_VAR, ))
             elif element == "*":
                 adder.append((I.MUL,))
             elif element == "drop":

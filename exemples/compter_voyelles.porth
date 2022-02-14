@@ -1,0 +1,48 @@
+#include modules/std.porth
+#include modules/math.porth
+
+
+// print un string a l'envers
+// "coucou" 
+// "" split
+// is_stack_not_empty while
+//     print
+//     is_stack_not_empty
+// end newline
+
+macro is_voyelle
+    false "is_voyelle" set
+    dup "a" = if true "is_voyelle" set end
+    dup "e" = if true "is_voyelle" set end
+    dup "i" = if true "is_voyelle" set end
+    dup "o" = if true "is_voyelle" set end
+    dup "u" = if true "is_voyelle" set end
+    dup "y" = if true "is_voyelle" set end
+    drop
+    "is_voyelle" get
+    "is_voyelle" vardrop
+end
+
+macro compter_voyelles
+    dup len swap
+    "" split swap
+    0 1 - "min" set
+    "max" set
+    0 "total_voyelles" set
+    
+    "max" get "min" get > while 
+
+        is_voyelle if 
+            1 "total_voyelles" var_add
+        end
+
+        1 "min" var_add "max" get "min" get > 
+    end
+    "min" vardrop
+    "max" vardrop
+    "total_voyelles" get
+    "total_voyelles" vardrop
+    swap drop
+end
+
+"coucou" compter_voyelles print
