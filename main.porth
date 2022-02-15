@@ -1,4 +1,4 @@
 #include modules/std.porth
 #include modules/math.porth
 
-"Hello, world" printl
+[ 1 2 3 4 ] len_liste print

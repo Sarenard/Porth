@@ -6,18 +6,23 @@ class Interpreteur:
         self.debug = debug
         self.debug_output = debug_output
         self.stack = []
+        self.stack_storage = []
         self.variables = {}
     def run(self, instructions):
         for instruction in instructions:
             if self.debug :
-                print(instruction)
-                print(self.stack)
+                print("instruction :", instruction)
+                print("stack :", self.stack)
+                print("stack_storage :", self.stack_storage)
                 print(self.variables)
             if self.debug_output :
-                print(instruction, file=open("debug.txt", "a"), flush=True)
-                print(self.stack, file=open("debug.txt", "a"), flush=True)
+                print("instruction :", instruction, file=open("debug.txt", "a"), flush=True)
+                print("stack :", self.stack, file=open("debug.txt", "a"), flush=True)
+                print("stack_storage :", self.stack_storage,  file=open("debug.txt", "a"), flush=True)
                 print(self.variables, file=open("debug.txt", "a"), flush=True)
             match instruction:
+                case I.PUSHLIST, liste, :
+                    self.stack.append((Type.LIST, liste))
                 case I.VARSET, :
                     name = self.stack.pop()
                     value = self.stack.pop()
@@ -63,11 +68,34 @@ class Interpreteur:
                 case I.PRINT, :
                     if len(self.stack) < 1 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack in the PRINT, needed 1, got " + str(len(self.stack)))
                     a = self.stack.pop()
-                    if a[0] == Type.STRING :
+                    if a[0] == Type.LIST:
+                        print([truc[1] for truc in a[1]], end="")
+                    elif a[0] == Type.STRING :
                         a = (Type.STRING, a[1].replace("\\n", "\n"))
                         a = (Type.STRING, a[1].replace("\\033", "\033"))
                         a = (Type.STRING, a[1].replace("\\N", ""))
-                    print(a[1], end="")
+                        print(a[1], end="")
+                    elif a[0] == Type.INT:
+                        print(a[1], end="")
+                case I.IN, :
+                    liste = self.stack.pop()
+                    if liste[0] != Type.LIST:
+                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the IN, needed LIST, got " + str(liste[0]))
+                    self.stack_storage = [x for x in self.stack]
+                    self.stack = liste[1]
+                case I.OUT, :
+                    self.stack = [x for x in self.stack_storage]
+                    self.stack_storage = []
+                case I.EXPEND, :
+                    liste = self.stack.pop()
+                    for x in liste[1]:
+                        self.stack.append(x)
+                case I.INPUT, :
+                    element = input()
+                    if element.isnumeric():
+                        self.stack.append((I.PUSHINT, element))
+                    else:
+                        self.stack.append((I.PUSHSTRING, element))
                 case I.TRUE, :
                     self.stack.append((Type.BOOL, True))
                 case I.FALSE, :
@@ -173,8 +201,10 @@ class Interpreteur:
                         else:
                             raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the WHILE, needed BOOL, got " + str(a[0]))
             if self.debug:
-                print(self.stack)
+                print("stack :", self.stack)
+                print("stack_storage :", self.stack_storage)
                 print(self.variables, "\n")
             if self.debug_output:
-                print(self.stack, file=open("debug.txt", "a"), flush=True)
+                print("stack :", self.stack, file=open("debug.txt", "a"), flush=True)
+                print("stack_storage :", self.stack_storage, file=open("debug.txt", "a"), flush=True)
                 print(self.variables, "\n", file=open("debug.txt", "a"), flush=True)

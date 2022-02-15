@@ -30,8 +30,14 @@ class I(IntEnum):
     STACK_LEN = auto()
     SPLIT = auto()
     DROP_VAR = auto()
+    PUSHLIST = auto()
+    IN = auto()
+    OUT = auto()
+    EXPEND = auto()
+
 
 class Type(IntEnum):
     INT = auto()
     BOOL = auto()
     STRING = auto()
+    LIST = auto()

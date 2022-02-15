@@ -9,6 +9,12 @@ macro is_voyelle
     dup "o" = if true "is_voyelle" set end
     dup "u" = if true "is_voyelle" set end
     dup "y" = if true "is_voyelle" set end
+    dup "A" = if true "is_voyelle" set end
+    dup "E" = if true "is_voyelle" set end
+    dup "I" = if true "is_voyelle" set end
+    dup "O" = if true "is_voyelle" set end
+    dup "U" = if true "is_voyelle" set end
+    dup "Y" = if true "is_voyelle" set end
     drop
     "is_voyelle" get
     "is_voyelle" vardrop
@@ -58,7 +64,7 @@ macro compter_consonnes
     swap drop
 end
 
-"hello world"
+"Je suis Loris"
 dup "Il y a \N" print compter_voyelles print "\N voyelles dans \N" print dup printl
 dup "Il y a \N" print compter_consonnes print "\N consonnes dans \N" print dup printl
 "C'est un mot de \N" print len print drop_stack "\N caracteres" printl

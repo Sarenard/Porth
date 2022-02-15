@@ -1,4 +1,4 @@
-from src.Instructions import I
+from src.Instructions import I, Type
 import src.Exceptions as Exceptions
 
 import json
@@ -25,6 +25,7 @@ class Parser:
         self.total_macros = 0
         self.instructions_temporaires = []
         self.liste_included = []
+        self.in_liste = False
     def getstr(self, file):
         if self.debug : print(open(file).read().replace("\n", "\\n"))
         if self.debug_output : print(open(file).read().replace("\n", "\\n"), file=open("debug.txt", "w"), flush=True)
@@ -44,18 +45,50 @@ class Parser:
                 break
             if self.debug : print(f"\nInstruction (debut {a}) : \"{element}\"\n{self.instructions=}\n{self.instructions_temporaires=}")
             if self.debug_output : print(f"\nInstruction (debut {a}) : \"{element}\"\n{self.instructions=}\n{self.instructions_temporaires=}", file=open("debug.txt", "a"), flush=True)
-            if element.isnumeric():
-                adder.append((I.PUSHINT, element))
+            if element.startswith("["):
+                self.in_liste=True
+                self.instructions_temporaires.append([])
+            if element.endswith("]"):
+                self.in_liste=False
+                self.instructions_temporaires[-1].append(element)
+                total = []
+                in_string = False
+                string = ""
+                for truc in self.instructions_temporaires[-1]:
+                    if truc.startswith("\""):
+                        string += f"{str(truc)} "
+                        in_string=True
+                    elif truc.endswith("\""):
+                        string += f"{str(truc)} "
+                        in_string=False
+                        total.append(string[1:-2])
+                    elif in_string:
+                        string += f"{str(truc)} "
+                    else:
+                        total.append(truc)
+                total[0], total[-1] = total[0][1:], total[-1][:-1]
+                total2 = [(Type.INT, int(element), ) if element.isnumeric() else (Type.STRING, element, ) for element in total]
+                self.instructions.append((I.PUSHLIST, total2[1:-1], ))
+                self.instructions_temporaires.pop()
+            elif self.in_liste:
+                self.instructions_temporaires[-1].append(f"{element}")
+            elif element.isnumeric():
+                if self.in_liste:
+                    self.instructions_temporaires[-1].append(element)
+                else:
+                    adder.append((I.PUSHINT, element))
             elif element == ".":
                 adder.append((I.PRINT,))
+            elif element in ["expand", "exp"]:
+                adder.append((I.EXPEND, ))
+            elif element == "in":
+                adder.append((I.IN, ))
+            elif element == "out":
+                adder.append((I.OUT, ))
             elif element == "+":
                 adder.append((I.ADD,))
             elif element in ["ipt", ","]:
-                element = input()
-                if element.isnumeric():
-                    adder.append((I.PUSHINT, element))
-                else:
-                    adder.append((I.PUSHSTRING, element))
+                adder.append((I.INPUT, ))
             elif element == "dup":
                 adder.append((I.DUP,))
             elif element == "split":
@@ -124,7 +157,10 @@ class Parser:
                         string += " "+element.split("\"")[0]
                     else:
                         string += " "+element
-                adder.append((I.PUSHSTRING, string))
+                if self.in_liste:
+                    self.instructions_temporaires[-1].append(element)
+                else:
+                    adder.append((I.PUSHSTRING, string))
             else:
                 if element != "":
                     adder.append((I.MACROWORD, element))

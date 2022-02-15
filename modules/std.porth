@@ -81,5 +81,6 @@ macro print_stack is_stack_not_empty while print is_stack_not_empty end end
 macro printl_stack is_stack_not_empty while printl is_stack_not_empty end end
 
 macro len lstack "taille_avant" set "" split lstack "taille_avant" get - "taille_avant" dropvar 1 + end
+macro len_liste lstack "len_liste_avant" set expand lstack "len_liste_avant" get - 1 + dup "len" set "max" set 0 "min" set "max" get "min" get > while  drop 1 "min" var_add "max" get "min" get >  end "len" get "len" vardrop "min" vardrop "max" vardrop "len_liste_avant" vardrop end
 
 macro drop_stack is_stack_not_empty while drop is_stack_not_empty end end
