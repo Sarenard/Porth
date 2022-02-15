@@ -1,3 +1,8 @@
 #include modules/std.porth
 #include modules/math.porth
 
+macro con
+    [ 3 ] * len_liste
+end
+
+50 con printl

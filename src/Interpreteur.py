@@ -151,6 +151,10 @@ class Interpreteur:
                         self.stack.append((Type.INT, b[1]*a[1]))
                     elif b[0] == Type.STRING and a[0] == Type.INT:
                         self.stack.append((Type.STRING, b[1]*a[1]))
+                    elif b[0] == Type.LIST and a[0] == Type.INT:
+                        self.stack.append((Type.LIST, b[1]*a[1]))
+                    elif b[0] == Type.INT and a[0] == Type.LIST:
+                        self.stack.append((Type.LIST, b[1]*a[1]))
                     else:
                         raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the MUL, needed INT+INT or STRING+INT, got " + str(a[0]) + " and " + str(b[0]))
                 case I.DIV, :
