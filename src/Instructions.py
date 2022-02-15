@@ -34,7 +34,12 @@ class I(IntEnum):
     IN = auto()
     OUT = auto()
     EXPEND = auto()
-
+    APPEND = auto()
+    REMOVE = auto()
+    READ = auto()
+    WRITE = auto()
+    EXIT = auto()
+    CONVERT = auto()
 
 class Type(IntEnum):
     INT = auto()

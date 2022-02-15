@@ -84,3 +84,6 @@ macro len lstack "taille_avant" set "" split lstack "taille_avant" get - "taille
 macro len_liste lstack "len_liste_avant" set expand lstack "len_liste_avant" get - 1 + dup "len" set "max" set 0 "min" set "max" get "min" get > while  drop 1 "min" var_add "max" get "min" get >  end "len" get "len" vardrop "min" vardrop "max" vardrop "len_liste_avant" vardrop end
 
 macro drop_stack is_stack_not_empty while drop is_stack_not_empty end end
+
+macro is_digit false "is_voyelle" set dup "0" = if true "is_voyelle" set end dup "1" = if true "is_voyelle" set end dup "2" = if true "is_voyelle" set end dup "3" = if true "is_voyelle" set end dup "4" = if true "is_voyelle" set end dup "5" = if true "is_voyelle" set end dup "6" = if true "is_voyelle" set end dup "7" = if true "is_voyelle" set end dup "8" = if true "is_voyelle" set end dup "9" = if true "is_voyelle" set end drop "is_voyelle" get "is_voyelle" vardrop end
+macro is_int dup len dup "len" set swap "" split swap 0 "min1" set "max1" set 0 "total" set "max1" get "min1" get > while is_digit if  1 "total" var_add end 1 "min1" var_add "max1" get "min1" get >  end "min1" vardrop "max1" vardrop "total" get "total" vardrop swap drop "len" get "len" vardrop = end

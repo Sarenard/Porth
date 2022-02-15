@@ -1,5 +1,6 @@
 from src.Instructions import I, Type
 import src.Exceptions as Exceptions
+from sys import exit
 
 class Interpreteur:
     def __init__(self, debug, debug_output):
@@ -36,7 +37,7 @@ class Interpreteur:
                         for x in b[1]:
                             self.stack.append((Type.STRING, x))
                     else:
-                        for x in b[1].split(a[1]):
+                        for x in b[1].split(a[1].replace("\\N", "")):
                             self.stack.append((Type.STRING, x))
                 case I.VARGET, :
                     name = self.stack.pop()
@@ -56,7 +57,7 @@ class Interpreteur:
                     a = self.stack.pop()
                     b = self.stack.pop()
                     if b[0] == Type.INT and a[0] == Type.INT:
-                        self.stack.append((Type.INT, a[1] + b[1]))
+                        self.stack.append((Type.INT, int(a[1]) + int(b[1])))
                     elif b[0] == Type.STRING and a[0] == Type.STRING:
                         self.stack.append((Type.STRING, a[1] + b[1]))
                     elif b[0] == Type.STRING and a[0] == Type.INT:
@@ -77,6 +78,23 @@ class Interpreteur:
                         print(a[1], end="")
                     elif a[0] == Type.INT:
                         print(a[1], end="")
+                    elif a[0] == Type.BOOL:
+                        print(a[1], end="")
+                case I.READ, :
+                    name = self.stack.pop()
+                    if not name[0] == Type.STRING:
+                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the READ, needed STRING, got " + str(name[0]))
+                    content = open(name[1], "r").read()
+                    self.stack.append((Type.STRING, content))
+                case I.WRITE, :
+                    name = self.stack.pop()
+                    if not name[0] == Type.STRING:
+                        raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the READ, needed STRING, got " + str(name[0]))
+                    string = self.stack.pop()[1]
+                    with open(name[1], "w") as file:
+                        file.write(string)
+                case I.EXIT, :
+                    exit(1)
                 case I.IN, :
                     liste = self.stack.pop()
                     if liste[0] != Type.LIST:
@@ -98,6 +116,10 @@ class Interpreteur:
                         self.stack.append((I.PUSHSTRING, element))
                 case I.TRUE, :
                     self.stack.append((Type.BOOL, True))
+                case I.CONVERT, :
+                    a = self.stack.pop()
+                    b = self.stack.pop()
+                    self.stack.append((a[0], b[1]))
                 case I.FALSE, :
                     self.stack.append((Type.BOOL, False))
                 case I.DUP, :
@@ -157,6 +179,16 @@ class Interpreteur:
                         self.stack.append((Type.LIST, b[1]*a[1]))
                     else:
                         raise Exceptions.BadTypesOnTheStack("Bad types on the stack in the MUL, needed INT+INT or STRING+INT, got " + str(a[0]) + " and " + str(b[0]))
+                case I.APPEND, :
+                    valeur = self.stack.pop()
+                    liste = self.stack.pop()
+                    liste[1].append(valeur)
+                    self.stack.append((Type.LIST, liste[1]))
+                case I.REMOVE, :
+                    liste = self.stack.pop()
+                    element = liste[1].pop()
+                    self.stack.append((Type.LIST, liste[1][0:len(liste[1])]))
+                    self.stack.append(element)
                 case I.DIV, :
                     if len(self.stack) < 2 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack in the DIV, needed 2, got " + str(len(self.stack)))
                     a = self.stack.pop()

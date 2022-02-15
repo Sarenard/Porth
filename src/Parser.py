@@ -85,8 +85,18 @@ class Parser:
                 adder.append((I.IN, ))
             elif element == "out":
                 adder.append((I.OUT, ))
+            elif element == "exit":
+                adder.append((I.EXIT, ))
+            elif element == "read":
+                adder.append((I.READ, ))
+            elif element == "write":
+                adder.append((I.WRITE, ))
             elif element == "+":
                 adder.append((I.ADD,))
+            elif element == "append":
+                adder.append((I.APPEND, ))
+            elif element == "remove":
+                adder.append((I.REMOVE, ))
             elif element in ["ipt", ","]:
                 adder.append((I.INPUT, ))
             elif element == "dup":
@@ -131,6 +141,8 @@ class Parser:
                 x += 1
             elif element == "div":
                 adder.append((I.DIV, ))
+            elif element == "convert":
+                adder.append((I.CONVERT, ))
             elif element == "if":
                 self.instructions_temporaires.append([])
                 adder = self.instructions_temporaires[-1]
