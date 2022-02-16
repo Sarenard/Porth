@@ -119,7 +119,8 @@ class Interpreteur:
                 case I.CONVERT, :
                     a = self.stack.pop()
                     b = self.stack.pop()
-                    self.stack.append((a[0], b[1]))
+                    if a[0] == Type.INT:
+                        self.stack.append((a[0], int(b[1])))
                 case I.FALSE, :
                     self.stack.append((Type.BOOL, False))
                 case I.DUP, :
@@ -216,7 +217,7 @@ class Interpreteur:
                     a = self.stack.pop()
                     b = self.stack.pop()
                     if b[0] == Type.INT and a[0] == Type.INT:
-                        self.stack.append((Type.INT, b[1]-a[1]))
+                        self.stack.append((Type.INT, int(b[1])-int(a[1])))
                 case I.IF, instructions:
                     if len(self.stack) < 1 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack in the IF, needed 1, got " + str(len(self.stack)))
                     a = self.stack.pop()

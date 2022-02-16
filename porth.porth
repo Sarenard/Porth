@@ -6,9 +6,9 @@
 0 "min" set
 0 "max" set
 
-macro transform_to_int
-    0 convert
-end
+macro transform_to_int 0 convert end
+macro transform_to_str "" convert end
+macro transform_to_list [] convert end
 
 macro read_instructions
     read dup "original" set
@@ -29,6 +29,7 @@ macro run
     read_instructions
     dup len_liste "max" set
     0 "min" set
+    "Liste d'instructions : \N" print "instructions" get printl newline
     "max" get "min" get > while
         "instructions" get remove interpreter
         1 "min" var_add "max" get "min" get > 
@@ -36,27 +37,71 @@ macro run
     "min" dropvar "max" dropvar
 end
 
+// currently implemented : 
+// TYPES : int
+// OPERATIONS : + - * / % 
+// WORDS : . dup drop swap
 macro interpreter
-    // dup "Instruction : \N" print printl
-    // "stack" get printl
+    dup "Instruction : \N" print printl
+    "stack" get printl
 
     dup is_int if
-        "stack" get swap append "stack" set
+        "stack" get swap transform_to_int append "stack" set
     end
     dup "." = if
         "stack" get remove swap "stack" set
-        printl
     end
     dup "+" = if
         "stack" get remove "var1" set
         "stack" get remove "var2" set
-        "var1" get transform_to_int "var2" get transform_to_int + 
+        "var1" get transform_to_int
+        "var2" get transform_to_int + transform_to_int
         "stack" get swap append
         "var1" dropvar "var2" dropvar
     end
+    dup "-" = if
+        "stack" get remove transform_to_int "var1" set
+        "stack" get remove transform_to_int "var2" set
+        "var1" get "var2" get - transform_to_int
+        "stack" get swap append
+        "var1" dropvar "var2" dropvar
+    end
+    dup "*" = if
+        "stack" get remove transform_to_int "var1" set
+        "stack" get remove transform_to_int "var2" set
+        "var1" get "var2" get * transform_to_int
+        "stack" get swap append
+        "var1" dropvar "var2" dropvar
+    end
+    dup "%" = if
+        "stack" get remove transform_to_int "var1" set
+        "stack" get remove transform_to_int "var2" set
+        "var1" get "var2" get % transform_to_int
+        "stack" get swap append
+        "var1" dropvar "var2" dropvar
+    end
+    dup "/" = if
+        "stack" get remove transform_to_int "var1" set
+        "stack" get remove transform_to_int "var2" set
+        "var1" get "var2" get / transform_to_int
+        "stack" get swap append
+        "var1" dropvar "var2" dropvar
+    end
+    dup "dup" = if
+        "stack" get remove dup "stack" get swap append "stack" set "stack" get swap append "stack" set
+    end
+    dup "drop" = if
+        "stack" get remove drop "stack" set
+    end
+    dup "swap" = if
+        "stack" get remove "var1" set 
+        "stack" get remove "var2" set 
+        "stack" get swap "var1" get append "var2" get append "stack" set 
+        "var1" dropvar "var2" dropvar
+    end
 
-    // "stack" get printl
-    // newline
+    "stack" get printl
+    newline
 end
 
 "main.porth" run
