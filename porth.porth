@@ -1,7 +1,8 @@
 #include modules/std.porth
 #include modules/math.porth
 
-[] "stack" set
+[] "types_stack" set
+[] "value_stack" set
 [] "instructions" set
 0 "min" set
 0 "max" set
@@ -43,64 +44,95 @@ end
 // WORDS : . dup drop swap
 macro interpreter
     dup "Instruction : \N" print printl
-    "stack" get printl
+    "value stack : \N" print "value_stack" get printl
+    "types stack : \N" print "types_stack" get printl
 
     dup is_int if
-        "stack" get swap transform_to_int append "stack" set
+        "value_stack" get swap transform_to_int append "value_stack" set
+        "types_stack" get "INT" append "types_stack" set
     end
     dup "." = if
-        "stack" get remove swap "stack" set
+        "types_stack" get remove swap "type_stack" set
+        "INT" = if 
+            "value_stack" get remove swap "value_stack" set
+            "Info affichee : \N" print printl
+        end
     end
     dup "+" = if
-        "stack" get remove "var1" set
-        "stack" get remove "var2" set
-        "var1" get transform_to_int
-        "var2" get transform_to_int + transform_to_int
-        "stack" get swap append
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "type_stack" set
+        "types_stack" get remove swap "type_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap + transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
         "var1" dropvar "var2" dropvar
     end
     dup "-" = if
-        "stack" get remove transform_to_int "var1" set
-        "stack" get remove transform_to_int "var2" set
-        "var1" get "var2" get - transform_to_int
-        "stack" get swap append
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "type_stack" set
+        "types_stack" get remove swap "type_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap - transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
         "var1" dropvar "var2" dropvar
     end
     dup "*" = if
-        "stack" get remove transform_to_int "var1" set
-        "stack" get remove transform_to_int "var2" set
-        "var1" get "var2" get * transform_to_int
-        "stack" get swap append
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "type_stack" set
+        "types_stack" get remove swap "type_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap * transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
         "var1" dropvar "var2" dropvar
     end
     dup "%" = if
-        "stack" get remove transform_to_int "var1" set
-        "stack" get remove transform_to_int "var2" set
-        "var1" get "var2" get % transform_to_int
-        "stack" get swap append
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "type_stack" set
+        "types_stack" get remove swap "type_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap % transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
         "var1" dropvar "var2" dropvar
     end
     dup "/" = if
-        "stack" get remove transform_to_int "var1" set
-        "stack" get remove transform_to_int "var2" set
-        "var1" get "var2" get / transform_to_int
-        "stack" get swap append
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "type_stack" set
+        "types_stack" get remove swap "type_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap / transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
         "var1" dropvar "var2" dropvar
     end
     dup "dup" = if
-        "stack" get remove dup "stack" get swap append "stack" set "stack" get swap append "stack" set
+        "value_stack" get remove dup "value_stack" get swap append "value_stack" set "value_stack" get swap append "value_stack" set
     end
     dup "drop" = if
-        "stack" get remove drop "stack" set
+        "value_stack" get remove drop "value_stack" set
     end
     dup "swap" = if
-        "stack" get remove "var1" set 
-        "stack" get remove "var2" set 
-        "stack" get swap "var1" get append "var2" get append "stack" set 
+        "value_stack" get remove "var1" set 
+        "value_stack" get remove "var2" set 
+        "value_stack" get swap "var1" get append "var2" get append "value_stack" set 
         "var1" dropvar "var2" dropvar
     end
 
-    "stack" get printl
+    "value stack : \N" print "value_stack" get printl
+    "types stack : \N" print "types_stack" get printl
     newline
 end
 
