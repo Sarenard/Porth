@@ -35,8 +35,8 @@ macro blue    "\033[94m" print print "\033[0m" print end
 macro magenta "\033[95m" print print "\033[0m" print end
 macro cyan    "\033[96m" print print "\033[0m" print end
 macro white   "\033[97m" print print "\033[0m" print end
-macro warning "[warning] "    yellow yellow          end
-macro error   "[error] "      red    red             end
+macro warning "WARNING " yellow yellow               end
+macro error   "ERROR "   red    red                  end
 
 macro grayl     gray    newline end
 macro redl      red     newline end

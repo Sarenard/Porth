@@ -7,9 +7,13 @@
 0 "min" set
 0 "max" set
 
+macro is_bool dup "true" = swap "false" = or swap drop end
+macro make_it_bool True = end
+
 macro transform_to_int 0 convert end
 macro transform_to_str "" convert end
 macro transform_to_list [] convert end
+macro transform_to_bool "true" = end
 
 macro read_instructions
     read dup "original" set
@@ -20,7 +24,8 @@ macro read_instructions
     "longueur" get "max" set
     "max" get "min" get > while
         "instructions" get swap append "instructions" set
-        1 "min" var_add "max" get "min" get > 
+        1 "min" var_add 
+        "max" get "min" get > 
     end
     "min" dropvar "max" dropvar
     "instructions" get
@@ -33,23 +38,28 @@ macro run
     "Liste d'instructions : \N" print "instructions" get printl newline
     "max" get "min" get > while
         "instructions" get remove interpreter
-        1 "min" var_add "max" get "min" get > 
+        1 "min" var_add 
+        "max" get "min" get > 
     end
     "min" dropvar "max" dropvar
 end
 
 // currently implemented : 
-// TYPES : int
+// TYPES : int bool
 // OPERATIONS : + - * / % 
-// WORDS : . dup drop swap
+// WORDS : . dup drop swap nand
 macro interpreter
-    dup "Instruction : \N" print printl
-    "value stack : \N" print "value_stack" get printl
-    "types stack : \N" print "types_stack" get printl
+    // dup "Instruction : \N" print printl
+    // "value stack : \N" print "value_stack" get printl
+    // "types stack : \N" print "types_stack" get printl
 
     dup is_int if
         "value_stack" get swap transform_to_int append "value_stack" set
         "types_stack" get "INT" append "types_stack" set
+    end
+    dup is_bool if
+        "value_stack" get swap "true" = append "value_stack" set
+        "types_stack" get "BOOL" append "types_stack" set
     end
     dup "." = if
         "types_stack" get remove swap "type_stack" set
@@ -57,6 +67,21 @@ macro interpreter
             "value_stack" get remove swap "value_stack" set
             "Info affichee : \N" print printl
         end
+    end
+    dup "nand" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "type_stack" set
+        "types_stack" get remove swap "type_stack" set
+        "BOOL" = swap "BOOL" = and dup if 
+            "var1" get make_it_bool showl "var2" get make_it_bool showl nand
+            "value_stack" get swap append "value_stack" set
+            "types_stack" get "BOOL" append "types_stack" set
+        end
+        not if
+            "ERROR IN THE NAND, ESPECTED 2 BOOLEAN VALUES" error exit
+        end
+        "var1" dropvar "var2" dropvar
     end
     dup "+" = if
         "value_stack" get remove "var1" set
@@ -131,9 +156,9 @@ macro interpreter
         "var1" dropvar "var2" dropvar
     end
 
-    "value stack : \N" print "value_stack" get printl
-    "types stack : \N" print "types_stack" get printl
-    newline
+    // "value stack : \N" print "value_stack" get printl
+    // "types stack : \N" print "types_stack" get printl
+    // newline
 end
 
 "main.porth" run

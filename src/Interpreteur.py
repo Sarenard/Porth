@@ -2,6 +2,8 @@ from src.Instructions import I, Type
 import src.Exceptions as Exceptions
 from sys import exit
 
+#convert
+
 class Interpreteur:
     def __init__(self, debug, debug_output):
         self.debug = debug
@@ -121,6 +123,8 @@ class Interpreteur:
                     b = self.stack.pop()
                     if a[0] == Type.INT:
                         self.stack.append((a[0], int(b[1])))
+                    if a[0] == Type.BOOL:
+                        self.stack.append((a[0], b[1]))
                 case I.FALSE, :
                     self.stack.append((Type.BOOL, False))
                 case I.DUP, :
