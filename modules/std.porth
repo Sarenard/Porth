@@ -19,6 +19,7 @@ macro True true end
 macro space "\N \N" print end
 macro dup2 2dup end
 macro vardrop dropvar end
+macro pass end
 
 macro print . end
 macro printl print newline end
@@ -35,8 +36,8 @@ macro blue    "\033[94m" print print "\033[0m" print end
 macro magenta "\033[95m" print print "\033[0m" print end
 macro cyan    "\033[96m" print print "\033[0m" print end
 macro white   "\033[97m" print print "\033[0m" print end
-macro warning "WARNING " yellow yellow               end
-macro error   "ERROR "   red    red                  end
+macro warning "WARNING : " yellow yellow               end
+macro error   "ERROR : "   red    red                  end
 
 macro grayl     gray    newline end
 macro redl      red     newline end
@@ -90,3 +91,4 @@ macro is_int dup len dup "len" set swap "" split swap 0 "min1" set "max1" set 0 
 
 macro reverse_list [] "reverse_list_reversed" set "reverse_list_original" set "reverse_list_original" get len_liste "reverse_list_max" set 0 "reverse_list_min" set "reverse_list_max" get "reverse_list_min" get > while "reverse_list_original" get remove swap "reverse_list_original" set "reverse_list_reversed" get swap append "reverse_list_reversed" set 1 "reverse_list_min" var_add "reverse_list_max" get "reverse_list_min" get > end "reverse_list_reversed" get "reverse_list_reversed" dropvar "reverse_list_min" dropvar "reverse_list_max" dropvar "reverse_list_original" dropvar end
 
+macro is_bool_from_string dup "true" = swap "false" = or swap drop end

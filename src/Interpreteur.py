@@ -5,7 +5,8 @@ from sys import exit
 #convert
 
 class Interpreteur:
-    def __init__(self, debug, debug_output):
+    def __init__(self, debug, debug_output, liste_args):
+        self.stack_argv = liste_args+[len(liste_args)]
         self.debug = debug
         self.debug_output = debug_output
         self.stack = []
@@ -54,6 +55,11 @@ class Interpreteur:
                     self.stack.append((Type.INT, int(nb)))
                 case I.PUSHSTRING, texte:
                     self.stack.append((Type.STRING, texte))
+                case I.ARGV_POP, :
+                    arg = self.stack_argv.pop()
+                    if str(arg).isnumeric() : arg = (Type.INT, int(arg), )
+                    else                    : arg = (Type.STRING, arg, )
+                    self.stack.append(arg)
                 case I.ADD, :
                     if len(self.stack) < 2 : raise Exceptions.NotEnoughStuffOnTheStack("Not enough stuff on the stack in the ADD, needed 2, got " + str(len(self.stack)))
                     a = self.stack.pop()

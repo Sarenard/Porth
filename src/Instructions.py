@@ -40,6 +40,7 @@ class I(IntEnum):
     WRITE = auto()
     EXIT = auto()
     CONVERT = auto()
+    ARGV_POP = auto()
 
 class Type(IntEnum):
     INT = auto()

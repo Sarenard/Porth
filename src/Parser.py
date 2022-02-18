@@ -68,7 +68,7 @@ class Parser:
                         total.append(truc)
                 total[0], total[-1] = total[0][1:], total[-1][:-1]
                 total2 = [(Type.INT, int(element), ) if element.isnumeric() else (Type.STRING, element, ) for element in total]
-                self.instructions.append((I.PUSHLIST, total2[1:-1], ))
+                adder.append((I.PUSHLIST, total2[1:-1], ))
                 self.instructions_temporaires.pop()
             elif self.in_liste:
                 self.instructions_temporaires[-1].append(f"{element}")
@@ -136,6 +136,8 @@ class Parser:
                 adder.append((I.TRUE,))
             elif element == "false":
                 adder.append((I.FALSE,))
+            elif element == "argvpop":
+                adder.append((I.ARGV_POP, ))
             elif element == "#include":
                 adder.append((I.INCLUDE, self.content[x+1]))
                 x += 1
@@ -210,7 +212,7 @@ class Parser:
         if self.debug : print("includes avant :", instructions, "liste modules inclus:", self.liste_included)
         if self.debug_output : print("includes avant :", instructions, "liste modules inclus:", self.liste_included, file=open("debug.txt", "a"), flush=True)
         liste_includes = []
-        for i in range(len(instructions)-2):
+        for i in range(max(len(instructions)-2, 1)):
             if instructions[i] == "#include":
                 if instructions[i+1] not in self.liste_included:
                     self.liste_included.append(instructions[i+1])
