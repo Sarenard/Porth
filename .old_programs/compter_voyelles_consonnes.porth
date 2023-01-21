@@ -1,0 +1,70 @@
+#include modules/std.porth
+#include modules/math.porth
+
+macro is_voyelle
+    false "is_voyelle" set
+    dup "a" = if true "is_voyelle" set end
+    dup "e" = if true "is_voyelle" set end
+    dup "i" = if true "is_voyelle" set end
+    dup "o" = if true "is_voyelle" set end
+    dup "u" = if true "is_voyelle" set end
+    dup "y" = if true "is_voyelle" set end
+    dup "A" = if true "is_voyelle" set end
+    dup "E" = if true "is_voyelle" set end
+    dup "I" = if true "is_voyelle" set end
+    dup "O" = if true "is_voyelle" set end
+    dup "U" = if true "is_voyelle" set end
+    dup "Y" = if true "is_voyelle" set end
+    drop
+    "is_voyelle" get
+    "is_voyelle" vardrop
+end
+
+macro compter_voyelles
+    dup len swap
+    "" split swap
+    0 "min" set
+    "max" set
+    0 "total" set
+    
+    "max" get "min" get > while 
+
+        is_voyelle if 
+            1 "total" var_add
+        end
+
+        1 "min" var_add "max" get "min" get > 
+    end
+    "min" vardrop
+    "max" vardrop
+    "total" get
+    "total" vardrop
+    swap drop
+end
+
+macro compter_consonnes
+    dup len swap
+    "" split swap
+    0 "min" set
+    "max" set
+    0 "total" set
+    
+    "max" get "min" get > while 
+
+        is_voyelle not if 
+            1 "total" var_add
+        end
+
+        1 "min" var_add "max" get "min" get > 
+    end
+    "min" vardrop
+    "max" vardrop
+    "total" get
+    "total" vardrop
+    swap drop
+end
+
+"Je suis Loris"
+dup "Il y a \N" print compter_voyelles print "\N voyelles dans \N" print dup printl
+dup "Il y a \N" print compter_consonnes print "\N consonnes dans \N" print dup printl
+"C'est un mot de \N" print len print drop_stack "\N caracteres" printl

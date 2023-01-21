@@ -1,0 +1,16 @@
+#include modules/std.porth
+#include modules/math.porth
+
+600851475143
+2 true rot
+for while
+    is_divisible if
+        rot rot drop false rot
+        "Voila un facteur de 600851475143 :" print space show endl
+        dup is_prime if
+            "Voila un nombre premier de 600851475143 :" print space show endl
+        end
+    end
+    endfor
+end
+drop drop

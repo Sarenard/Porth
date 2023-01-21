@@ -1,0 +1,176 @@
+#include modules/std.porth
+#include modules/math.porth
+
+[] "types_stack" set
+[] "value_stack" set
+[] "instructions" set
+0 "min" set
+0 "max" set
+
+// get print and debug settings from argv
+argvpop 2 = dup if 
+    argvpop "-debug" = "debug" set
+    argvpop "-print" = "prints" set
+end not if
+false "debug" set
+false "prints" set
+end
+
+macro make_it_bool True = end
+
+macro transform_to_int 0 convert end
+macro transform_to_str "" convert end
+macro transform_to_list [] convert end
+macro transform_to_bool "true" = end
+
+macro read_instructions
+    read dup "original" set
+    lstack "longueur" set
+    "\N \N" split
+    lstack "longueur" get - 1 + "longueur" set
+    0 "min" set
+    "longueur" get "max" set
+    "max" get "min" get > while
+        "instructions" get swap append "instructions" set
+        1 "min" var_add 
+        "max" get "min" get > 
+    end
+    "min" dropvar "max" dropvar
+    "instructions" get
+end
+
+macro run
+    read_instructions
+    dup len_liste "max" set
+    0 "min" set
+    "debug" get if "Liste d'instructions : \N" print "instructions" get printl newline end
+    "max" get "min" get > while
+        "instructions" get remove interpreter
+        1 "min" var_add 
+        "max" get "min" get > 
+    end
+    "min" dropvar "max" dropvar
+end
+
+// currently implemented : 
+// TYPES : int bool
+// OPERATIONS : + - * / % 
+// WORDS : . dup drop swap nand
+macro interpreter
+    "debug" get if dup "Instruction : \N" print printl                end
+    "debug" get if "value stack : \N" print "value_stack" get printl  end
+    "debug" get if "types stack : \N" print "types_stack" get printl  end
+
+    dup is_int if
+        "value_stack" get swap transform_to_int append "value_stack" set
+        "types_stack" get "INT" append "types_stack" set
+    end
+    dup is_bool_from_string if
+        "value_stack" get swap "true" = append "value_stack" set
+        "types_stack" get "BOOL" append "types_stack" set
+    end
+    dup "." = if
+        "types_stack" get remove swap "types_stack" set
+        dup "INT" = if 
+            "value_stack" get remove swap "value_stack" set
+            "prints" get if "Info affichee : \N" print printl end
+        end
+        "BOOL" = if 
+            "value_stack" get remove swap "value_stack" set
+            "prints" get if "Info affichee : \N" print printl end
+        end
+    end
+    dup "nand" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "types_stack" set
+        "types_stack" get remove swap "types_stack" set
+        "BOOL" = swap "BOOL" = and dup if 
+            "var1" get make_it_bool "var2" get make_it_bool nand
+            "value_stack" get swap append "value_stack" set
+            "types_stack" get "BOOL" append "types_stack" set
+        end
+        not if
+            "ERROR IN THE NAND, ESPECTED 2 BOOLEAN VALUES" error exit
+        end
+        "var1" dropvar "var2" dropvar
+    end
+    dup "+" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "types_stack" set
+        "types_stack" get remove swap "types_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap + transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
+        "var1" dropvar "var2" dropvar
+    end
+    dup "-" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "types_stack" set
+        "types_stack" get remove swap "types_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap - transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
+        "var1" dropvar "var2" dropvar
+    end
+    dup "*" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "types_stack" set
+        "types_stack" get remove swap "types_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap * transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
+        "var1" dropvar "var2" dropvar
+    end
+    dup "%" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "types_stack" set
+        "types_stack" get remove swap "types_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap % transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
+        "var1" dropvar "var2" dropvar
+    end
+    dup "/" = if
+        "value_stack" get remove "var1" set
+        "value_stack" get remove "var2" set
+        "types_stack" get remove swap "types_stack" set
+        "types_stack" get remove swap "types_stack" set
+        "INT" = swap "INT" = and if 
+            "var1" get "var2" get swap / transform_to_int
+            "value_stack" get swap append
+            "types_stack" get "INT" append "types_stack" set
+        end
+        "var1" dropvar "var2" dropvar
+    end
+    dup "dup" = if
+        "value_stack" get remove dup "value_stack" get swap append "value_stack" set "value_stack" get swap append "value_stack" set
+    end
+    dup "drop" = if
+        "value_stack" get remove drop "value_stack" set
+    end
+    dup "swap" = if
+        "value_stack" get remove "var1" set 
+        "value_stack" get remove "var2" set 
+        "value_stack" get swap "var1" get append "var2" get append "value_stack" set 
+        "var1" dropvar "var2" dropvar
+    end
+
+    "debug" get if "value stack : \N" print "value_stack" get printl end
+    "debug" get if "types stack : \N" print "types_stack" get printl end
+    "debug" get if newline                                           end
+end
+
+"main.porth" run

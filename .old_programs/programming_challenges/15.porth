@@ -1,0 +1,31 @@
+#include modules/std.porth
+
+macro 3n+1_step
+    "valeur" set_copy
+    dup even dup if
+        2 "valeur" var_div
+    end
+    not if
+        3 "valeur" var_mul
+        1 "valeur" var_add
+    end
+    "valeur" get
+end
+
+macro 3n+1_process
+    dup
+    true while
+        3n+1_step dup green odrop space
+        
+        false over 1 = not if not end
+    end
+    newline
+    drop
+end
+
+100 1 for while
+
+    dup red "\N : \N" yellow 3n+1_process
+
+    endfor
+end

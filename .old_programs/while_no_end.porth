@@ -1,0 +1,6 @@
+#include modules\std.porth
+
+true while 
+    42 print newline
+    true
+end

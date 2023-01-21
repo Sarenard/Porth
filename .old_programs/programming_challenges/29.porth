@@ -1,0 +1,13 @@
+#include modules/math.porth
+#include modules/std.porth
+
+1 "result" set
+// le nombre dont on va calculer la factorielle
+100
+
+1 + 1 for while
+    dup "result" var_mul
+    endfor
+end drop drop
+
+"Le resultat est : " print "result" get printl

@@ -1,0 +1,8 @@
+#include modules/std.porth
+
+1000 0 for while
+    
+    show newline
+
+    endfor
+end

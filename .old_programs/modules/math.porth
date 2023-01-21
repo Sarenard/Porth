@@ -1,0 +1,29 @@
+#include modules/std.porth
+
+macro factorielle
+    0 1 rot
+    2dup > while
+        1 +
+        rot rot over * rot
+        2dup >
+    end
+    drop drop
+end
+macro fact factorielle end
+
+macro is_divisible 2dup % 0 = end
+
+macro is_prime
+    2 true rot
+    2dup > while
+        is_divisible if
+            rot rot drop false rot
+        end
+        1 +
+        2dup >
+    end
+    drop drop
+end
+
+macro ** dup * end
+macro ^ ** end

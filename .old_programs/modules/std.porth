@@ -1,0 +1,94 @@
+macro not dup nand end
+macro yes not not end
+macro and nand not end
+macro nor not over not nand not end
+macro or not over not nand end
+macro xor over over or rot and not and end
+macro xnor xor not end
+macro % div odrop end
+macro / div drop end
+macro bool 0 = not end
+macro negate 0 swap - end
+macro show dup . end
+macro even 2 % 0 = end
+macro odd 2 % 1 = end
+macro pair even end
+macro impair odd end
+macro False false end
+macro True true end
+macro space "\N \N" print end
+macro dup2 2dup end
+macro vardrop dropvar end
+macro pass end
+
+macro print . end
+macro printl print newline end
+macro showl show newline end
+macro newline "\n" print end
+macro endl newline end
+macro \n endl end
+
+macro gray    "\033[90m" print print "\033[0m" print end
+macro red     "\033[91m" print print "\033[0m" print end
+macro green   "\033[92m" print print "\033[0m" print end
+macro yellow  "\033[93m" print print "\033[0m" print end
+macro blue    "\033[94m" print print "\033[0m" print end
+macro magenta "\033[95m" print print "\033[0m" print end
+macro cyan    "\033[96m" print print "\033[0m" print end
+macro white   "\033[97m" print print "\033[0m" print end
+macro warning "WARNING : " yellow yellow               end
+macro error   "ERROR : "   red    red                  end
+
+macro grayl     gray    newline end
+macro redl      red     newline end
+macro greenl    green   newline end
+macro yellowl   yellow  newline end
+macro bluel     blue    newline end
+macro magental  magenta newline end
+macro cyanl     cyan    newline end
+macro whitel    white   newline end
+macro warningl  warning newline end
+macro errorl    error   newline end
+
+macro swap rot2 end
+
+macro set @= end
+macro set_copy over swap @= end
+macro get @! end
+macro var_to_int dup get rot rot end
+macro var_add var_to_int + swap set end
+macro var_mul var_to_int * swap set end
+macro var_sub var_to_int - swap set end
+macro var_div var_to_int / swap set end
+macro var_mod var_to_int % swap set end
+
+macro for dup2 > end
+macro for0 0 for end
+macro endfor 1 + dup2 > end
+
+macro 2var_get get swap get swap end
+macro 2var_add 2var_get + end
+macro 2var_sub 2var_get - end
+macro 2var_mul 2var_get * end
+macro 2var_div 2var_get / end
+macro 2var_mod 2var_get % end
+
+macro odrop swap drop end
+
+macro is_stack_empty lstack 0 = end
+macro is_stack_not_empty is_stack_empty not end
+
+macro print_stack is_stack_not_empty while print is_stack_not_empty end end
+macro printl_stack is_stack_not_empty while printl is_stack_not_empty end end
+
+macro len lstack "taille_avant" set "" split lstack "taille_avant" get - "taille_avant" dropvar 1 + end
+macro len_liste lstack "len_liste_avant" set expand lstack "len_liste_avant" get - 1 + dup "len" set "max" set 0 "min" set "max" get "min" get > while  drop 1 "min" var_add "max" get "min" get >  end "len" get "len" vardrop "min" vardrop "max" vardrop "len_liste_avant" vardrop end
+
+macro drop_stack is_stack_not_empty while drop is_stack_not_empty end end
+
+macro is_digit false "is_voyelle" set dup "0" = if true "is_voyelle" set end dup "1" = if true "is_voyelle" set end dup "2" = if true "is_voyelle" set end dup "3" = if true "is_voyelle" set end dup "4" = if true "is_voyelle" set end dup "5" = if true "is_voyelle" set end dup "6" = if true "is_voyelle" set end dup "7" = if true "is_voyelle" set end dup "8" = if true "is_voyelle" set end dup "9" = if true "is_voyelle" set end drop "is_voyelle" get "is_voyelle" vardrop end
+macro is_int dup len dup "len" set swap "" split swap 0 "min1" set "max1" set 0 "total" set "max1" get "min1" get > while is_digit if  1 "total" var_add end 1 "min1" var_add "max1" get "min1" get >  end "min1" vardrop "max1" vardrop "total" get "total" vardrop swap drop "len" get "len" vardrop = end
+
+macro reverse_list [] "reverse_list_reversed" set "reverse_list_original" set "reverse_list_original" get len_liste "reverse_list_max" set 0 "reverse_list_min" set "reverse_list_max" get "reverse_list_min" get > while "reverse_list_original" get remove swap "reverse_list_original" set "reverse_list_reversed" get swap append "reverse_list_reversed" set 1 "reverse_list_min" var_add "reverse_list_max" get "reverse_list_min" get > end "reverse_list_reversed" get "reverse_list_reversed" dropvar "reverse_list_min" dropvar "reverse_list_max" dropvar "reverse_list_original" dropvar end
+
+macro is_bool_from_string dup "true" = swap "false" = or swap drop end
